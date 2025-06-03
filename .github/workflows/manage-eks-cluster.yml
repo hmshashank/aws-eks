@@ -12,6 +12,12 @@ on:
       action:
         description: 'Action to perform (apply/destroy)'
         required: true
+      awsAccessKeyId:
+        description: 'AWS Access Key ID'
+        required: true
+      awsSecretAccessKey:
+        description: 'AWS Secret Access Key'
+        required: true
 
 jobs:
   apply_cluster:
@@ -20,19 +26,29 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ github.event.inputs.awsAccessKeyId }}
+        aws-secret-access-key: ${{ github.event.inputs.awsSecretAccessKey }}
+        aws-region: ${{ github.event.inputs.awsRegion }}
+    
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+    
     - name: Terraform Init
       run: terraform init
       working-directory: Terraform
+    
     - name: Terraform Format
       run: terraform fmt
       working-directory: Terraform
+    
     - name: Terraform Validate
       run: terraform validate
       working-directory: Terraform
+    
     - name: Terraform Apply
       run: terraform apply -var clusterName=${{ github.event.inputs.clusterName }} -var awsRegion=${{ github.event.inputs.awsRegion }} -auto-approve
       working-directory: Terraform
@@ -43,19 +59,29 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ github.event.inputs.awsAccessKeyId }}
+        aws-secret-access-key: ${{ github.event.inputs.awsSecretAccessKey }}
+        aws-region: ${{ github.event.inputs.awsRegion }}
+    
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+    
     - name: Terraform Init
       run: terraform init
       working-directory: Terraform
+    
     - name: Terraform FMT
       run: terraform fmt
       working-directory: Terraform
+    
     - name: Terraform Validate
       run: terraform validate
       working-directory: Terraform
+    
     - name: Terraform Destroy
       run: terraform destroy -var clusterName=${{ github.event.inputs.clusterName }} -var awsRegion=${{ github.event.inputs.awsRegion }} -auto-approve
       working-directory: Terraform
