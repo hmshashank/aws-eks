@@ -65,6 +65,7 @@ jobs:
       with:
         aws-access-key-id: ${{ github.event.inputs.awsAccessKeyId }}
         aws-secret-access-key: ${{ github.event.inputs.awsSecretAccessKey }}
+        aws-session-token: ${{ github.event.inputs.awsSessionToken }}
         aws-region: ${{ github.event.inputs.awsRegion }}
     
     - name: Setup Terraform
