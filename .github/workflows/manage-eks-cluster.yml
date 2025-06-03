@@ -41,8 +41,8 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
     
-    - name: Terraform Init
-      run: terraform init
+    - name: Terraform Init with upgrade
+      run: terraform init -upgrade
       working-directory: Terraform
     
     - name: Terraform Format
