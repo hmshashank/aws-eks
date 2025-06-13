@@ -2,6 +2,7 @@ from aws_cdk import (
     Stack,
     CfnOutput,
     aws_s3 as s3,
+    RemovalPolicy  # Add this import
 )
 from constructs import Construct
 
